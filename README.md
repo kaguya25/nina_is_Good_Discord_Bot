@@ -35,8 +35,8 @@ cp .env.example .env
 `.env` をエディタで開いて各値を記入する。GitHub監視機能を使う場合は以下も追加してください。
 
 ```env
-GITHUB_WATCH_USER=kaguya25  # 監視対象ユーザー名 (または kaguya25/discord の形式でも可)
-GITHUB_WATCH_CHANNEL_ID=1234567890  # 通知先のチャンネルID
+GITHUB_WATCH_USER=your_github_username  # 監視対象ユーザー名 (例: your_github_username)
+GITHUB_WATCH_CHANNEL_ID=your_channel_id  # 通知先のDiscordチャンネルID (例: 123456789012345678)
 ```
 
 ### 3. インストールと起動
