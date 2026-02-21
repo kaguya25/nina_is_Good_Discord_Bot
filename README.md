@@ -35,7 +35,7 @@ cp .env.example .env
 `.env` をエディタで開いて各値を記入する。GitHub監視機能を使う場合は以下も追加してください。
 
 ```env
-GITHUB_WATCH_REPO=kaguya25/discord  # 監視対象リポジトリ
+GITHUB_WATCH_USER=kaguya25  # 監視対象ユーザー名 (または kaguya25/discord の形式でも可)
 GITHUB_WATCH_CHANNEL_ID=1234567890  # 通知先のチャンネルID
 ```
 
