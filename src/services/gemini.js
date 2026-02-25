@@ -110,7 +110,9 @@ export async function searchAndChat(userMessage) {
  * @returns {Promise<string>}
  */
 export async function summarize(title, description) {
-  const prompt = `以下の記事を日本語で1-2文で要約してください。技術的なポイントを押さえてください。
+  const prompt = `以下の記事を読んで、仁菜として1〜2文で「私ならこう思います！」と要約して紹介してください。
+ただのあらすじではなく、桃香さんに「こういう技術があるんですよ！」と少し誇らしげに、でも簡潔に説明する感じでお願いします。
+メタな発言（「〜という記事です」等）は避けてください。
 
 タイトル: ${title}
 内容: ${description || '(本文なし)'}`;
@@ -120,6 +122,9 @@ export async function summarize(title, description) {
     contents: [
       { role: 'user', parts: [{ text: prompt }] },
     ],
+    config: {
+      systemInstruction: NINA_SYSTEM_PROMPT,
+    },
   });
 
   return response.text;
