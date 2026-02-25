@@ -14,22 +14,27 @@ const supabase = (supabaseUrl && supabaseKey) ? createClient(supabaseUrl, supaba
  */
 export async function fetchRecentHistory(channel, limit = 15) {
     try {
-        // 直近のメッセージを取得 (Bot自身のメッセージも含む)
-        const messages = await channel.messages.fetch({ limit });
+        // 直近のメッセージを取得
+        // limit件取得するが、今ユーザーが送った最新のメッセージは
+        // 呼び出し元 (gemini.js) で手動追加されるため、1件分除外する想定で多めに取る
+        const messages = await channel.messages.fetch({ limit: limit + 1 });
         const history = [];
 
-        messages.reverse().forEach((msg) => {
-            // テキストがないメッセージ（画像のみ等）はスキップ
+        // 最新のメッセージ（0番目）はgemini.jsで追加するので歴史からは除外する
+        const messagesArray = Array.from(messages.values()).slice(1);
+
+        messagesArray.reverse().forEach((msg) => {
             if (!msg.content) return;
 
-            // ユーザーかモデルかでロールを割り当て
+            // ユーザーかモデルかでロールを完全に分ける
             const role = msg.author.bot ? 'model' : 'user';
 
-            // "Name: Content" 形式で誰の発言か分かるようにする
-            const content = `${msg.member?.displayName || msg.author.username}: ${msg.content}`;
+            // userの場合は名前を付けて誰の発言か分かりやすくする
+            const prefix = role === 'user' ? `${msg.member?.displayName || msg.author.username}: ` : '';
+            const content = `${prefix}${msg.content}`;
 
             history.push({
-                role: 'user', // Gemini APIの仕様上、historyは user/model の交互が望ましいが、ここでは文脈としてまとめて渡すため一旦全て 'user' として扱うか、あるいはプロンプトに埋め込む
+                role: role,
                 parts: [{ text: content }],
             });
         });
